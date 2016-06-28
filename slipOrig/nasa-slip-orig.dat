@@ -1,0 +1,133 @@
+# Data file for origonal 45-degree timeline for schedule slip chart of NASA launches 
+# from 1960 to 1965
+
+# Note: 
+#  Lines starting with a '#' are comment lines, and ignored completely.
+#  Multi word strings must be enclosed in quote marks (") lines can be
+#    continued using a \, even inside strings. initial whitespace on a
+#    continued line is removed (so put any you want before the \ )
+
+
+# Set up axis range (in years), labels, and page size (in inches, yuk)
+
+axis.x 1960 1967 "\\textsc{Actual Date}"
+axis.y 1961 1966 "\\textsc{Planned Launch Date}"
+axis.pagewidth 10
+axis.pageheight 10
+
+
+# Annotation settings
+
+annotate.width    45 
+annotate.indent   ""
+
+
+# Footnotes, use numbers to decide ordering.
+
+footnote.1 "~a ~Launch slip made to accommodate launch of Mariner R to Venus."
+footnote.2 "~b ~Launch slip made to modify RA-6 through RA-9 to ensure \
+            success of TV experiment in support of science and Apollo \
+            program objectives."
+footnote.3 "~c ~Launch slip made to improve quality of the vidicon tubes \
+            for RA-7 through RA-9."
+footnote.4 "$\mathrm{d}_1$ Launch slip made to incorporate TV subsystem \
+            modifications on RA-7 through RA-9 after failure to obtain \
+            pictures from RA-6; Exact launch dates for RA-8 and RA-9 under \
+            study."
+footnote.5 "$\mathrm{d}_2$ RA-8 and RA-9 launch dates formalized."
+footnote.6 "~e ~Launch slip made to avoid tracking interference with Mariner \
+            C flight."
+
+
+# Footnote settings.
+# Width is in characters, location is in fraction of page size.
+
+footnote.indent   ~~~~~
+footnote.width    60 
+footnote.location 0.58 0.42
+
+
+# Font settings
+
+font.small 6
+font.large 10
+
+
+# Event list. Columns are :
+#    Event Date ( year:month )
+#    Thread Name
+#    Event Type ( Start, End, or Delta )
+#    Value      ( year:month of predicted end for Start, 
+#                 delta months for Delta, and anything for End )
+#    Annotation ( "-" as first character to align annotate to the left, 
+#                 "+" as first character to align annotate to the right.
+#                 use multiple - or + characters to offset further to the
+#                 left or right, with the last - or + deciding the alignment.)
+
+1960:9  RA-1 Start 1961:7  "-RA-1"
+1960:9  RA-2 Start 1961:10 "-RA-2"
+1960:9  RA-3 Start 1962:1  "-RA-3"
+1960:9  RA-4 Start 1962:4  "-RA-4"
+1960:9  RA-5 Start 1962:7  "-RA-5"
+
+1960:10 RA-5 Delta -1
+
+1961:7  RA-1 Delta 1
+1961:8  RA-1 End   0  "+RA-1 LAUNCHED 8-23-61"
+
+1961:9  RA-5 Delta 5  "-a"
+
+1961:9  RA-6 Start 1963:1 "-RA-6"
+1961:9  RA-7 Start 1963:4 "-RA-7"
+1961:9  RA-8 Start 1963:5 "-RA-8"
+1961:9  RA-9 Start 1963:8 "-RA-9"
+
+1961:10 RA-2 Delta 1
+1961:11 RA-2 End   0  "+RA-2 LAUNCHED 11-18-61"
+
+1962:1  RA-3 End   0  "+RA-3 LAUNCHED 1-26-62"
+
+1962:3  RA-5 Delta -1
+1962:3  RA-9 Delta 1
+
+1962:4  RA-4 End   0  "+RA-4 LAUNCHED 4-23-61"
+
+1962:5  RA-7 Delta -1
+
+1962:10 RA-5 End   0  "+RA-5 LAUNCHED\n 10-18-62" 
+
+1962:11 RA-6 Delta 1
+1962:11 RA-7 Delta 1
+1962:11 RA-8 Delta 1
+1962:12 RA-6 Delta 1
+
+1963:2  RA-6 Delta 9
+1963:2  RA-7 Delta 9
+1963:2  RA-8 Delta 9  "-b"
+1963:2  RA-9 Delta 7
+
+1963:9  RA-7 Delta 1
+1963:9  RA-8 Delta 2
+1963:9  RA-9 Delta 3  "-c"
+
+1963:11 RA-6 Delta 1
+
+1964:1  RA-6 End   0  "+RA-6 LAUNCHED 1-30-64" 
+
+1964:2  RA-7 Delta 1
+
+1964:3  RA-7 Delta 3
+1964:3  RA-8 Delta 7  "-$\mathrm{d}_1$"
+1964:3  RA-9 Delta 6
+
+1964:5  RA-7 Delta 1
+
+1964:7  RA-7 End   0  "+RA-7 LAUNCHED 7-28-64"
+1964:7  RA-8 Delta 1
+1964:7  RA-9 Delta 2  "-$\mathrm{d}_2$"
+
+1964:9  RA-8 Delta 1  "-e"
+
+1965:2  RA-8 End   0  "+RA-8 LAUNCHED 2-17-65"
+1965:3  RA-9 End   0  "+RA-9 LAUNCHED 3-21-65"
+
