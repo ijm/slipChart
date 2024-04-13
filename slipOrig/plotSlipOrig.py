@@ -10,16 +10,21 @@ import matplotlib as mpl
 
 mpl.use('pgf')
 pgf_with_pdflatex = {
-        "pgf.texsystem": "pdflatex",
-        "pgf.preamble": [
-                 r"\usepackage[utf8x]{inputenc}",
-                 r"\usepackage[T1]{fontenc}",
-                 ]
+    "pgf.texsystem": "pdflatex",
+    "pgf.preamble": "\n".join([
+         r"\usepackage[utf8x]{inputenc}",
+         r"\usepackage[T1]{fontenc}",
+         ] )
 }
-mpl.rcParams.update({'font.size': 9, "font.family": "serif",})
+mpl.rcParams.update({
+    'font.size': 9,
+    "font.family": "serif",
+    'text.usetex':True,
+    })
 mpl.rcParams.update(pgf_with_pdflatex)
 
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FixedLocator, StrMethodFormatter,FuncFormatter 
 from helpers import *
 
 def doArgs() :
@@ -77,7 +82,7 @@ def plotSlip(ax,threads,params) :
                      cmt = cmt[1:]
                  else:
                      ax.text(x+offset, y+0.33, cmt+" ",
-                         ha=ha, va='top', fontsize=font["small"])
+                         ha=ha, va='top', fontsize=font["small"], zorder=4)
                      break
  
         xys = np.array(xys)
@@ -102,14 +107,14 @@ def plotSlip(ax,threads,params) :
     
     ax.text(fx, fy, s,
             verticalalignment='top', horizontalalignment='left',
-            transform=ax.transAxes, fontsize = font["small"])
+            transform=ax.transAxes, fontsize = font["small"], zorder=4)
 
     tmin = min( [xmin,ymin] )
     tmax = max( [xmax,ymax] )
 
-    ax.plot( [tmin,tmax],[tmin,tmax], c='black' )
+    ax.plot( [tmin,tmax],[tmin,tmax], c='black', zorder=3 )
     ax.fill_between( [tmin,tmax], [tmin,tmax], [tmin,tmin], 
-                                     facecolor='white',zorder=3)
+                                     facecolor='white',zorder=2)
 
     ax.set_xlim([xmin,xmax])
     ax.set_ylim([ymin-1,ymax])
@@ -117,30 +122,37 @@ def plotSlip(ax,threads,params) :
     ax.set_ylabel(ylabel)
     ax.set_xlabel(xlabel)
 
-    months = ['J','F','M','A','M','J','J','A','S','O','N','D']*int(tmax-tmin)
-    
+    months = ['J','F','M','A','M','J','J','A','S','O','N','D']
+    def fmt_mon(x, pos):
+        return f'{months[int(x%12)]}'
+
     ax.xaxis.set_label_position('top')
+    ax.xaxis.set_ticks_position('top')
+
+    ax.tick_params(which='major', width=0.8, length=8)
+    ax.tick_params(which='minor', width=0.75, length=2.5, labelsize=10)
 
     ax.xaxis.set_ticks( np.arange(xmin,xmax,divs)-0.5 )
     ax.xaxis.set_ticklabels(["$~~~~~~%d$" % y for y in np.arange(xminY,xmaxY)],
                             ha='left')
 
+    ax.xaxis.set_minor_locator(FixedLocator(np.arange(xmin, xmax)))
+    ax.xaxis.set_minor_formatter(FuncFormatter(fmt_mon))
     ax.xaxis.set_ticks(np.arange(xmin,xmax), minor=True)
-    ax.xaxis.set_ticklabels(months, minor=True )
 
     ax.yaxis.set_ticks( np.arange(ymin,ymax,divs)-0.5 )
     ax.yaxis.set_ticklabels(["$~~~~~~%d$" % y for y in np.arange(yminY,ymaxY)],
                             va='bottom')
 
-    ax.yaxis.set_ticks(np.arange(ymin,ymax) , minor=True)
-    ax.yaxis.set_ticklabels(months, minor=True )
+    ax.yaxis.set_minor_locator(FixedLocator(np.arange(ymin, ymax)))
+    ax.yaxis.set_minor_formatter(FuncFormatter(fmt_mon))
+    ax.yaxis.set_ticks(np.arange(ymin,ymax), minor=True)
 
-    ax.grid(True)
+    ax.grid(True, linestyle=':')
 
     for tick in ax.yaxis.get_major_ticks():
-        tick.label.set_rotation('vertical')
+        tick.label1.set_rotation('vertical')
 
-    ax.tick_params(axis='both', which='both', labeltop='on', labelbottom='off')
     ax.tick_params(axis='both', which='minor', labelsize=font["small"], pad=2)
     ax.tick_params(axis='both', which='major', labelsize=font["large"], pad=8 )
 
@@ -160,6 +172,7 @@ def main():
 
     f.savefig(args.oname+".pgf", bbox_inches = 'tight')
     f.savefig(args.oname+".pdf", bbox_inches = 'tight')
+    f.savefig(args.oname+".svg", bbox_inches = 'tight')
 
 main() 
 

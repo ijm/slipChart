@@ -14,8 +14,7 @@ def floatOrString(s) :
         b = s.split(":") 
         if len(b) == 2 :
             s = float(b[0]) * 12.0 + (float(b[1]) -1 )
-        else:
-            s = s.decode('string_escape')
+
     return s
 
  
@@ -55,11 +54,11 @@ def readRows( rs ) :
         cmt = row[4] if len(row)>4 else ""
     
         if cmd != "Start" and name not in threads :
-            print "Start of thread missing! ", row
+            print("Start of thread missing! ", row)
             raise NameError("missingThread")
 
         if cmd == "Start" and name in threads :
-            print "Thread already exists! ", row
+            print("Thread already exists! ", row)
             raise NameError("existingThread")
     
         if cmd == "Start":
@@ -72,7 +71,7 @@ def readRows( rs ) :
         elif cmd == "End" :
             (_, oend, _) = threads[name][-1]
             if now != oend :
-                print "Something went wrong at the end", row
+                print("Something went wrong at the end", row)
             threads[ name ].append( (now, oend, cmt) )
 
     return threads

@@ -10,8 +10,8 @@
 
 # Set up axis range (in years), labels, and page size (in inches, yuk)
 
-axis.x 1960 1967 "\textsc{Actual Date}"
-axis.y 1961 1966 "\textsc{Planned Launch Date}"
+axis.x 1960 1967 "\\textsc{Actual Date}"
+axis.y 1961 1966 "\\textsc{Planned Launch Date}"
 axis.pagewidth 10
 axis.pageheight 10
 
@@ -94,7 +94,7 @@ font.large 10
 
 1962:5  RA-7 Delta -1
 
-1962:10 RA-5 End   0  "+RA-5 LAUNCHED 10-18-62" 
+1962:10 RA-5 End   0  "+RA-5 LAUNCHED\n 10-18-62" 
 
 1962:11 RA-6 Delta 1
 1962:11 RA-7 Delta 1

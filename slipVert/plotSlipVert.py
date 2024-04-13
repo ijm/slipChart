@@ -11,15 +11,20 @@ import matplotlib as mpl
 mpl.use('pgf')
 pgf_with_pdflatex = {
     "pgf.texsystem": "pdflatex",
-    "pgf.preamble": [
-        r"\usepackage[utf8x]{inputenc}",
-        r"\usepackage[T1]{fontenc}",
-        ]
-    }
-mpl.rcParams.update({'font.size': 9, "font.family": "serif",})
+    "pgf.preamble": "\n".join([
+         r"\usepackage[utf8x]{inputenc}",
+         r"\usepackage[T1]{fontenc}",
+         ] )
+}
+mpl.rcParams.update({
+    'font.size': 9,
+    "font.family": "serif",
+    'text.usetex':True,
+    })
 mpl.rcParams.update(pgf_with_pdflatex)
 
 import matplotlib.pyplot as plt
+from matplotlib.ticker import FixedLocator, StrMethodFormatter, FixedFormatter, FuncFormatter 
 from helpers import *
 
 def doArgs() :
@@ -77,13 +82,13 @@ def plotSlip(ax,threads,params) :
                  else:
                      aax = (x-y)*0.5
                      aay = (x+y)*0.5 
+                     ap = ( None if abs(offset) < 1.0 else 
+                            dict(facecolor='grey', alpha=0.2, arrowstyle='-') )
+
                      ax.annotate( sfmt(cmt,awidth,aindent),
-                                  xy = (aax,aay), xytext=(aax+offset,aay), 
-                                  arrowprops=(dict() if abs(offset) < 1.0 else 
-                                              dict(facecolor='grey',
-                                                   alpha=0.2,
-                                                   arrowstyle='-')),
-                                  ha=ha, va='center', fontsize=font["small"] )
+                         xy = (aax, aay), xytext = (aax+offset, aay), 
+                         ha=ha, va='center', fontsize=font["small"],
+                         arrowprops = ap, fontweight="bold")
                      break
 
         # This is the scaled 45 degree rotation for each line, and it is
@@ -136,44 +141,41 @@ def plotSlip(ax,threads,params) :
     ax.set_xlim([xmin,xmax])
     ax.set_ylim([ymin-1,ymax])
     ax.set_aspect('equal')
-    #ax.set_ylabel(ylabel)
-    #ax.set_xlabel(xlabel)
 
-    months = ['J','F','M','A','M','J','J','A','S','O','N','D']*int(ymax-ymin)
+    months = ['J','F','M','A','M','J','J','A','S','O','N','D']
+    def fmt_mon(x, pos):
+        return f'{months[int(x%12)]}'
     
-    ax.xaxis.set_label_position('top')
-    ax.yaxis.set_label_position('right')
+    ax.yaxis.set_major_locator(FixedLocator(np.arange(ymin,ymax,divs)-0.5+7))
+    ax.yaxis.set_major_formatter(FixedFormatter(["$%d$" % y for y in np.arange(yminY,ymaxY)]))
 
-    ax.yaxis.set_ticks( np.arange(ymin,ymax,divs)-0.5+6 )
-    ax.yaxis.set_ticklabels(["$%d$" % y for y in np.arange(yminY,ymaxY)],
-                            va='center')
-
-    ax.yaxis.set_ticks(np.arange(ymin,ymax) , minor=True)
-    ax.yaxis.set_ticklabels(months, minor=True )
+    ax.yaxis.set_minor_locator(FixedLocator(np.arange(ymin, ymax)))
+    ax.yaxis.set_minor_formatter(FuncFormatter(fmt_mon))
 
     ys = range( int(ymin)-divs, int(ymax)+divs+1, divs )
     for y in ys :
         ax.plot( [xmin, 0, xmin], [y+xmin-0.5, y-0.5, y-xmin-0.5], ':',
-                 c='black', alpha=0.33)
-        ax.plot( [0, xmax] , [y-0.5,y-0.5] , ':', c='black', alpha=0.33)
+                 c='black', alpha=0.30, zorder=1, lw=1)
+        ax.plot( [0, xmax] , [y-0.5,y-0.5] , ':', c='black', alpha=0.30, zorder=1, lw=1)
 
     ax.spines['top'].set_visible(False)
     ax.spines['bottom'].set_visible(False)
     ax.spines['right'].set_position(('data',0))
     ax.spines['left'].set_position(('data',xmax))
 
-    # This needs cleanup.
-    ax.tick_params(axis='both', which='both',
-          labeltop='off', labelbottom='off', labelright='on', labelleft='on',
-          top     ='off', bottom     ='off', right='on',      left='on'
-          )
-    ax.tick_params(axis='y', which='both', direction='out')
-    ax.tick_params(axis='both', which='minor', labelsize=font["small"], pad=1, 
-                   labelleft='off', left='off' )
-    ax.tick_params(axis='both', which='major', labelsize=font["large"], pad=7,
-                   labelright='off', left='off', right='off' )
+    ax.tick_params(axis='both', which='both', 
+                   top=False, bottom=False, labeltop=False, labelbottom=False,
+                   right=False, left=False, labelright=False, labelleft=False,
+                   )
 
-    plt.setp(ax.get_yticklabels() , rotation=90)
+    ax.tick_params(axis='y', which='major', labelsize=font["large"], pad=7,
+                   right=False, left=False, labelright=False, labelleft=True,
+                   labelrotation=90,
+                   )
+
+    ax.tick_params(axis='y', which='minor', labelsize=font["small"], pad=1,
+                   right=True, left=False, labelright=True, labelleft=False,
+                   )
 
     
 def main():
@@ -192,6 +194,7 @@ def main():
 
     f.savefig(args.oname+".pgf", bbox_inches = 'tight')
     f.savefig(args.oname+".pdf", bbox_inches = 'tight')
+    f.savefig(args.oname+".svg", bbox_inches = 'tight')
 
 main() 
 
